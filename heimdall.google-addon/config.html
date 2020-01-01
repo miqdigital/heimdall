@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+   
+   function populateValues(){
+       google.script.run.withSuccessHandler(function(obj){
+          document.getElementById("tokenname").value = obj.tokenName;
+          document.getElementById("tokenid").value = obj.tokenId;
+          document.getElementById("jenkinsDomain").value = obj.jenkinsDomain;
+          document.getElementById("jenkinsJobCategory").value = obj.jenkinsJobCategory;
+          document.getElementById("s3AccessKey").value = obj.s3AccessKey;
+          document.getElementById("s3SecretKey").value = obj.s3SecretKey;
+       }).getAuthValues();
+       closeHelp();
+   }
+   
+   function getAuthenticationValues(){
+     var tokenName = $("#tokenname").val();
+     var tokenId = $("#tokenid").val();
+     var jenkinsDomain = $("#jenkinsDomain").val();
+     var jenkinsJobCategory = $("#jenkinsJobCategory").val();
+     var s3AccessKey =  $("#s3AccessKey").val();
+     var s3SecretKey = $("#s3SecretKey").val();
+     var auth = {
+       tokenName: tokenName,
+       tokenId: tokenId,
+       jenkinsDomain: jenkinsDomain,
+       jenkinsJobCategory: jenkinsJobCategory,
+       s3AccessKey: s3AccessKey,
+       s3SecretKey: s3SecretKey
+     }
+     google.script.run.getAuthenticationValues(auth); 
+     closeHelp();
+   }
+
+    </script>
+</head>
+<body onload="populateValues()">
+<div class="input-group">
+    <form onsubmit="getAuthenticationValues()" action="#">
+        <div class="form-group">
+            <label>Jenkins Token Name</label>
+            <input type="text" class="form-control" id="tokenname" placeholder="Enter Token Name">
+        </div>
+        <div class="form-group">
+            <label>Jenkins Token Id</label>
+            <input type="password" class="form-control" id="tokenid" placeholder="Enter Token Id">
+        </div>
+        <div class="form-group">
+            <label>Jenkins Domain</label>
+            <input type="text" class="form-control" id="jenkinsDomain"
+                   placeholder="Enter Domain name">
+        </div>
+        <div class="form-group">
+            <label>Jenkins Job Category</label>
+            <input type="text" class="form-control" id="jenkinsJobCategory"
+                   placeholder="Enter Job Category">
+        </div>
+        <div class="form-group">
+            <label>S3 Access Key</label>
+            <input type="password" class="form-control" id="s3AccessKey"
+                   placeholder="Enter S3 Access Key">
+        </div>
+        <div class="form-group">
+            <label>S3 Secret Key</label>
+            <input type="password" class="form-control" id="s3SecretKey"
+                   placeholder="Enter S3 Secret Key">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+</body>
+</html>
