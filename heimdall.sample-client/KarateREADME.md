@@ -2,7 +2,7 @@
 
 - Add the maven dependency in the pom of the automation module:
  <dependency>
-         <groupId>com.miq.automation</groupId>
+         <groupId>com.miqdigital.automation</groupId>
          <artifactId>heimdall.application</artifactId>
          <version>${heimdall.application.version}</version>
   </dependency>
