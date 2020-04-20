@@ -5,8 +5,8 @@
 
     <parent>
         <artifactId>heimdall</artifactId>
-        <groupId>com.miq.automation</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.miqdigital.automation</groupId>
+        <version>1.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -28,12 +28,12 @@
         <karate-junit4.version>0.9.3</karate-junit4.version>
         <cucumber-junit.version>4.2.0</cucumber-junit.version>
         <kotlin.version>1.3.50</kotlin.version>
-        <heimdall.application.version>1.0-SNAPSHOT</heimdall.application.version>
+        <heimdall.application.version>1.0</heimdall.application.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.miq.automation</groupId>
+            <groupId>com.miqdigital.automation</groupId>
             <artifactId>heimdall.application</artifactId>
             <version>${heimdall.application.version}</version>
         </dependency>
