@@ -9,7 +9,6 @@
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
-        <module>heimdall.sample-client</module>
         <module>heimdall.application</module>
     </modules>
 
