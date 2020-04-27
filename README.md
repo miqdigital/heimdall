@@ -106,7 +106,7 @@ Open your jenkins →click on your profile→Configure→Add New Token→Copy th
 
 ###### **Test Executions**
 
-<div style="width:100%;height:0;padding-bottom:69%;position:relative;"><iframe src="https://giphy.com/embed/MEjGD0cgUIKNUZkSDk" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/MEjGD0cgUIKNUZkSDk">via GIPHY</a></p>
+![](https://media.giphy.com/media/MEjGD0cgUIKNUZkSDk/giphy.gif)
 
 An alert message will pop-up saying Jenkins Job Triggered and you can see that jenkins will be triggered. If there is an error in between the flow, an alert message will pop-up with the corresponding message populated.
 Note : Main Cause for error could be the Wrong Configurations provide by User in Heimdall.
