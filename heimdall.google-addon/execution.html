@@ -16,72 +16,95 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
-
 <script>
-    
-    var list_of_ids;
-    
-    function env(value){
-       if(value == 'Test-onDemand'){
-           document.getElementById('addbranch').style="visibility: display; height: 50px;width: 300px;";      
-       }
-       else{
-            document.getElementById('addbranch').style="visibility: hidden; height: 0px;width: 0px;";
-       }
-    }
-    
-    function fun(){
-        var env=$("#environment").val();
-        var filter=$("#selectFilter").val();
-        var suites;
-        var tags;
-        if(filter == "suite"){
-           suites=$("#suitesMultiSelect").val();
-           tags = list_of_ids;
-        }else{
-           tags = "@" + filter;
-        }
+
+   var list_of_ids;
+
+   function env(value) {
+      if (value == 'Test-onDemand') {
+         document.getElementById('addbranch').style = "visibility: display; height: 50px;width: 300px;";
+      }
+      else {
+         document.getElementById('addbranch').style = "visibility: hidden; height: 0px;width: 0px;";
+      }
+   };
+
+
+   function fun() {
+      var env = (document.getElementById("customEnv").value == "") ? $("#environment").val() : document.getElementById("customEnv").value;
+      var suites;
+      var inputTag = document.getElementById('customTag').value;
+      var checkedBoxes = document.getElementsByClassName("custom-control-input");
+      var tags = "";
+
+      for (var i = 0; i < 3; i++) {
+         if (checkedBoxes[i].checked == true) {
+            tags = tags + ",@" + checkedBoxes[i].name;
+         }
+      }
+      tags = tags.substring(1, tags.length);
+
+      if (checkedBoxes[3].checked == true) {
+         suites = $("#suitesMultiSelect").val();
+         tags = tags + "," + list_of_ids;
+      }
+
+      if (tags != "" && inputTag != "") {
+         tags = tags + "," + inputTag;
+      }
+      else if (inputTag != "") {
+         tags = inputTag;
+      }
+      
       console.log(env)
       console.log(tags)
-      google.script.run.withSuccessHandler(function(responseCode){
+      google.script.run.withSuccessHandler(function (responseCode) {
          google.script.host.close();
-        console.log(responseCode);
-      }).runJenkinsParaJob(env,tags);
+         console.log(responseCode);
+      }).runJenkinsParaJob(env, tags);
       closeHelp();
-    }
-    
-    function closeHelp() {
-       google.script.host.close();
-    };
-    
-    function gsdata(value){
-       if(value=="suite"){
-       document.getElementById('submitButton').disabled = true;
-          google.script.run.withSuccessHandler(function(res) {
-              document.getElementById('SuitesNames').style="visibility: display;";
-              var select_tag = document.getElementById("suitesMultiSelect");
-              for(var i=0;i<res.unique_suites_Values.length;i++){
-                var opt_tag = document.createElement("option");
-                opt_tag.value = res.unique_suites_Values[i];
-                opt_tag.innerHTML = res.unique_suites_Values[i];
-                select_tag.appendChild(opt_tag);
-              }
-          }).getAvailableSuites();
-       }
-       else{
-         document.getElementById('SuitesNames').style="visibility: hidden;height: 0px;width: 0px;";
-       }
-    }
-    
-    function selectedSuites(value){
-    document.getElementById('submitButton').disabled = true;
-       var selectedValues = $("#suitesMultiSelect").val();
-       google.script.run.withSuccessHandler(function(list_of_issue_ids){
+
+   };
+
+   function closeHelp() {
+      google.script.host.close();
+   };
+   function inputvalue() {
+      var tagValue = document.getElementById('customTag').value;
+      if (tagValue != null) {
+         document.getElementById('submitButton').disabled = false;
+
+      }
+   };
+
+   function gsdata(value) {
+      if (document.getElementById('suite').checked == true) {
+         document.getElementById('submitButton').disabled = true;
+         google.script.run.withSuccessHandler(function (res) {
+            document.getElementById('SuitesNames').style = "visibility: display;";
+            var select_tag = document.getElementById("suitesMultiSelect");
+            for (var i = 0; i < res.unique_suites_Values.length; i++) {
+               var opt_tag = document.createElement("option");
+               opt_tag.value = res.unique_suites_Values[i];
+               opt_tag.innerHTML = res.unique_suites_Values[i];
+               select_tag.appendChild(opt_tag);
+            }
+         }).getAvailableSuites();
+      }
+      else {
+         document.getElementById('submitButton').disabled = false;
+         document.getElementById('SuitesNames').style = "visibility: hidden;height: 0px;width: 0px;";
+      }
+   };
+   function selectedSuites(value) {
+      document.getElementById('submitButton').disabled = true;
+      var selectedValues = $("#suitesMultiSelect").val();
+      google.script.run.withSuccessHandler(function (list_of_issue_ids) {
          list_of_ids = list_of_issue_ids.filtered_issue_id_list;
-          document.getElementById('submitButton').disabled = false;
-       }).getFilteredRowsOfSuites(selectedValues)  
-    }
-    
+         document.getElementById('submitButton').disabled = false;
+      }).getFilteredRowsOfSuites(selectedValues)
+   };
+
 
 </script>
 
@@ -90,39 +113,62 @@
     <div class="form-group">
         <label>Select Environment</label>
         <select class="form-control" id="environment" onchange="env(this.value)"
-                name=" choose environment" data-toggle="tooltip" data-placement="top"
-                title="Choose Environment">
+                name=" choose environment"
+                data-toggle="tooltip" data-placement="top" title="Choose Environment">
             <option value="qa">QA</option>
             <option value="integration">Integration</option>
             <option value="production">Production</option>
             <option value="preprod">Pre-Production</option>
         </select>
+        <div style="width: 100%; height: 15px; border-bottom: 0.5px solid grey; text-align: center">
+            <span style="font-size: 10px; color: #808080; background-color: #FFFFFF; padding: 5px 10px;">
+               OR
+            </span>
+        </div>
     </div>
-
-    <br/>
+    <div class="form-group">
+        <input class="form-control" type="text" id="customEnv" name="customEnv"
+               placeholder="Enter custom environment">
+    </div>
     <div class="form-group">
         <label>Choose Test Type</label>
-        <select class="form-control" onchange="gsdata(this.value)" id="selectFilter"
-                name="filteredType" data-toggle="tooltip" data-placement="top" title="Choose Tag">
-            <option value="sanity">Sanity</option>
-            <option value="regression">Regression</option>
-            <option value="smoke">Smoke</option>
-            <option value="suite">Suite</option>
-        </select>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="sanity" name="sanity">
+            <label class="custom-control-label" for="sanity">Sanity</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="regression" name="regression">
+            <label class="custom-control-label" for="regression">Regression</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="smoke" name="smoke">
+            <label class="custom-control-label" for="smoke">Smoke</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="suite" name="suite"
+                   onclick="gsdata(this.value)">
+            <label class="custom-control-label" for="suite">Suite</label>
+        </div>
+        <div style="width: 100%; height: 15px; border-bottom: 0.5px solid grey; text-align: center">
+            <span style="font-size: 10px; color: #808080; background-color: #FFFFFF; padding: 5px 10px;">
+               OR
+            </span>
+        </div>
     </div>
-
-    <div class="form-group" style="visibility: hidden;height: 0px;width: 0px;" id="SuitesNames">
-        <label>Select Tag and suite</label>
+    <div class="form-group" id="Input">
+        <input class="form-control" type="text" id="customTag" name="customTag" onfocus="inputvalue()"
+               placeholder="Enter Tag name (Ex: '@tag1, @tag2')">
+    </div>
+    <div class="form-group" style="visibility: hidden;height: 5px;width: 0px;" id="SuitesNames">
+        <label>Select Tag and Suite (Use Ctrl for multiselect)</label>
         <select multiple class="form-control" name="suitesSelected" id="suitesMultiSelect"
-                data-toggle="tooltip" data-placement="right" title="Select suites"
-                onchange="selectedSuites(this.value)">
+                data-toggle="tooltip"
+                data-placement="right" title="Select suites" onchange="selectedSuites(this.value)">
         </select>
     </div>
-    <br/>
-    <br/>
-
     <button type="submit" id='submitButton' class="btn btn-primary mb-2" data-toggle="tooltip"
-            data-placement="down" title="submitForm">Run Test
+            data-placement="down"
+            title="submitForm">Run Test
     </button>
 </form>
 </body>
