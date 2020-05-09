@@ -7,7 +7,7 @@
     <groupId>com.miqdigital.automation</groupId>
     <artifactId>heimdall</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <modules>
         <module>heimdall.application</module>
     </modules>

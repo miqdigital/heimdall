@@ -1,38 +1,39 @@
 package com.miqdigital.cucumber_runner.kotlinesample
 
-import com.intuit.karate.cucumber.CucumberRunner
+import com.intuit.karate.KarateOptions
+import com.intuit.karate.Results
+import com.intuit.karate.Runner
 import com.miqdigital.Heimdall
-import cucumber.api.CucumberOptions
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.IOException
 
 /**
  * The type Karate test runner.
  */
-@CucumberOptions(features = ["classpath:features/Karate"], tags = ["@regression"])
+@KarateOptions(features = ["classpath:features/Karate"], tags = ["@regression"])
 class KarateTestRunner {
 
 
-    private val pathOfPropertyFile = ""
-    private val cucumberOutputPath = ""
+  private val pathOfPropertyFile = ""
+  private val karateOutputPath = ""
 
-    /**
-     * Heimdall reporting.
-     *
-     * @throws InterruptedException   the interrupted exception
-     * @throws NoSuchFieldException   the no such field exception
-     * @throws IllegalAccessException the illegal access exception
-     * @throws IOException            the io exception
-     */
-    @Test
-    @Throws(InterruptedException::class, NoSuchFieldException::class, IllegalAccessException::class, IOException::class)
-    fun heimdallReporting() {
+  /**
+   * Heimdall reporting.
+   *
+   * @throws InterruptedException   the interrupted exception
+   * @throws NoSuchFieldException   the no such field exception
+   * @throws IllegalAccessException the illegal access exception
+   * @throws IOException            the io exception
+   */
+  @Test
+  @Throws(InterruptedException::class, NoSuchFieldException::class, IllegalAccessException::class, IOException::class)
+  fun heimdallReporting() {
 
-        val karateStats = CucumberRunner.parallel(javaClass, 5, cucumberOutputPath)
+    val results: Results = Runner.path(karateOutputPath).tags("@regression").parallel(10)
 
-        val heimdall = Heimdall()
-        heimdall.updateStatusInS3AndNotifySlack(pathOfPropertyFile, cucumberOutputPath)
-        assertEquals("There are scenario failures", 0, karateStats.failCount.toLong())
-    }
+    val heimdall = Heimdall()
+    heimdall.updateStatusInS3AndNotifySlack(pathOfPropertyFile, karateOutputPath)
+    assertEquals("There are scenario failures", 0, results.failCount.toLong())
+  }
 }
