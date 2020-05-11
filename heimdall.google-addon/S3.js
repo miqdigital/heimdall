@@ -43,7 +43,9 @@ S3.prototype.getObject = function (bucket, objectName, options) {
     request.setHttpMethod('GET');
     request.setContentType('application/json')
     request.setBucket(bucket);
-    if (typeof bucket !== 'string') SpreadsheetApp.getUi().alert('Pass valid bucket name');
+    if (typeof bucket !== 'string'){
+         SpreadsheetApp.getUi().alert('Pass valid bucket name');
+    }
     request.setObjectName(objectName);
     try {
         var responseBlob = request.execute(options).getBlob();
