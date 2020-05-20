@@ -61,18 +61,21 @@ Click on save, a pop-up box will be displayed mentioning that the configuration 
 
 ![](images/SaveUserProperties.png)
 
-#### Heimdall Add-on Features
+#### Heimdall Add-on Features:
 
 ![](images/Heimdall.png)
 
-###### **Test Executions**
+##### **Test Executions:**
 
-![](https://media.giphy.com/media/MEjGD0cgUIKNUZkSDk/giphy.gif)
+1. Click on Add-ons → Heimdall(Hover on it) → Click on Test Execution.
+2. Select Environment → Select Test Type → Click on Run Test for which the Jenkins job needs to be triggered.
+
+![](images/RunTest.png)
 
 An alert message will pop-up saying Jenkins Job Triggered and you can see that Jenkins will be triggered. If there is an error in between the flow, an alert message will pop-up with the corresponding message populated.
 Note: Main Cause for error could be the wrong Configurations provide by User in Heimdall add-on.
 
-###### **Update Build Info**
+###### **Update Build Info:**
 
 1. Click on Add-ons → Heimdall(Hover on it) → Click on Update Build Info.
 Google sheet will be updated with the Build data (The data for the builds which are not available previously in the sheet will be updated)
