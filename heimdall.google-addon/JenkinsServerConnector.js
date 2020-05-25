@@ -155,7 +155,7 @@ function getAllBuildCollection() {
 //TODO: Provide IAM role implementation
 function getStatusFromS3(buildNumber) {
     Logger.log("get status from s3")
-    var bucketName = "miq-qa-test-status";
+    userProperties.getProperty("s3BucketName");
     var jenkinsDomain = userProperties.getProperty("jenkinsDomain");
     var url = jenkinsDomain + "/job/" + jenkinsJobName + "/" + buildNumber + "/console";
     var note = "Test Results not found in S3";
