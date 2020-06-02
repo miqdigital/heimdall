@@ -32,7 +32,7 @@
 
    function fun() {
       var customEnv = document.getElementById("customEnv");
-      var env = (customEnv && customEnv.value === "") ? $("#environment").val() : customEnv.value;
+      var env = (customEnv && customEnv.value === "") ? document.getElementById("environment").value : customEnv.value;
       var suites;
       var inputTag = document.getElementById('customTag').value;
       var checkedBoxes = document.getElementsByClassName("custom-control-input");
