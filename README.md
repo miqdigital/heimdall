@@ -22,7 +22,7 @@ and notifies the recipients through the Communication channels (like Slack). Thi
 ## **Steps to Set-up**
 ### **Phase: 1 : Setting Up Test Cases From Jira to Google Spreadsheet**
 
-You can export test cases on google sheet via any tool you prefer. We use mobility stream plugin for realtime update. Check ![RealTimeJiraUpdateReadme](RealTimeJiraUpdateReadme.md)
+You can export test cases on google sheet via any tool you prefer. We use mobility stream plugin for realtime update. Check [RealTimeJiraUpdateReadme](RealTimeJiraUpdateReadme.md)
 
 ### **Phase: 2 : Setting Up Jenkins Job Configurations and Heimdall Add-on**
 1. Create a Jenkins job with the same name as your google sheet name which acts as a source to execute Heimdall (e.g: **project-tmt-test** is the Sheet name as well as the Jenkins job name).
