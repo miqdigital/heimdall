@@ -30,9 +30,29 @@ public class ReadProperties {
    */
   private String channelName;
   /**
-   * The constant isNotifySlack.
+   * The constant notifySlack.
    */
-  private boolean isNotifySlack;
+  private boolean notifySlack;
+  /**
+   * The constant notifyEmail.
+   */
+  private boolean notifyEmail;
+  /**
+   * The constant emailTo.
+   */
+  private String emailTo;
+  /**
+   * The constant emailFrom.
+   */
+  private String emailFrom;
+  /**
+   * The constant emailPort.
+   */
+  private String emailPort;
+  /**
+   * The constant emailSubject.
+   */
+  private String emailSubject;
   /**
    * The constant jiraPrefix.
    */
@@ -42,6 +62,22 @@ public class ReadProperties {
    * The constant s3BucketFolderName e.g. ABCCompanyAutomationTestReport
    */
   private String s3BucketName;
+  /**
+   * The host to use while sending email.
+   */
+  private String emailHost;
+  /**
+   * The SMTP username.
+   */
+  private String smtpUsername;
+  /**
+   * The SMTP password.
+   */
+  private String smtpPassword;
+  /**
+   * The company's Jenkins domain
+   */
+  private String jenkinsDomain;
 
   private Properties properties;
 
@@ -61,10 +97,19 @@ public class ReadProperties {
    */
   private void initFields() {
     channelName = properties.getProperty("CHANNEL_NAME");
-    isNotifySlack = Boolean.parseBoolean(properties.getProperty("ISNOTIFYSLACK"));
+    notifySlack = Boolean.parseBoolean(properties.getProperty("NOTIFY_SLACK"));
     heimdallBotToken = properties.getProperty("HEIMDALL_BOT_TOKEN");
     jiraPrefix = properties.getProperty("JIRA_PREFIX");
     s3BucketName = properties.getProperty("S3_BUCKETNAME");
+    emailHost = properties.getProperty("EMAIL_HOST");
+    smtpUsername = properties.getProperty("SMTP_USERNAME");
+    smtpPassword = properties.getProperty("SMTP_PASSWORD");
+    notifyEmail = Boolean.parseBoolean(properties.getProperty("NOTIFY_EMAIL"));
+    emailTo = properties.getProperty("EMAIL_TO");
+    emailFrom = properties.getProperty("EMAIL_FROM");
+    emailPort = properties.getProperty("EMAIL_PORT");
+    emailSubject = properties.getProperty("EMAIL_SUBJECT");
+    jenkinsDomain = properties.getProperty("JENKINS_DOMAIN");
   }
 
 }

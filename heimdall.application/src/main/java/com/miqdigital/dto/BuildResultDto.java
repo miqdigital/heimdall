@@ -1,9 +1,9 @@
-package com.miqdigital.slack.dto;
+package com.miqdigital.dto;
 
 import lombok.Builder;
 
 @Builder
-public class SlackMessageInfo {
+public class ResultDto {
   public StringBuilder testExecutionInfo;
   public StringBuilder failedTestDescription;
   public long failedTestCount;

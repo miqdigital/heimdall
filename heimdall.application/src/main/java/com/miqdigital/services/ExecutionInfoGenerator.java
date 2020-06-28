@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.miqdigital.execution.dto.ExecutionInfo;
 import com.miqdigital.scenario.dto.ScenarioInfo;
 import com.miqdigital.scenario.dto.ScenarioStep;
-import com.miqdigital.utility.ReadProperties;
+import com.miqdigital.utils.ReadProperties;
 
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;

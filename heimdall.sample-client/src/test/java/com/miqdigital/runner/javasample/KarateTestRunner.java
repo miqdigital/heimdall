@@ -1,8 +1,10 @@
-package com.miqdigital.cucumber_runner.javasample;
+package com.miqdigital.runner.javasample;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+
+import javax.mail.MessagingException;
 
 import org.junit.Test;
 
@@ -14,13 +16,12 @@ import com.miqdigital.Heimdall;
 /**
  * The type Karate test runner.
  */
-@KarateOptions(features = {"classpath:features/Karate"},
-               tags = {"@regression"})
+@KarateOptions
 public class KarateTestRunner {
 
 
-  private final String pathOfPropertyFile = "";
-  private final String karateOutputPath = "";
+  private final String pathOfPropertyFile = "src/test/resources/properties/runner.properties";
+  private final String karateOutputPath = "target/cucumber-reports";
 
   /**
    * Heimdall reporting.
@@ -32,12 +33,15 @@ public class KarateTestRunner {
    */
   @Test
   public void heimdallReporting()
-      throws InterruptedException, NoSuchFieldException, IllegalAccessException, IOException {
+      throws InterruptedException, NoSuchFieldException, IllegalAccessException, IOException,
+      MessagingException {
 
-    Results results = Runner.path(karateOutputPath).tags("@regression").parallel(10);
+    Results results =
+        Runner.path("classpath:features/Karate").reportDir(karateOutputPath).tags("@regression")
+            .parallel(10);
 
     final Heimdall heimdall = new Heimdall();
-    heimdall.updateStatusInS3AndNotifySlack(pathOfPropertyFile, karateOutputPath);
+    heimdall.updateStatusInS3AndNotify(pathOfPropertyFile, karateOutputPath);
     assertEquals("There are scenario failures", 0, results.getFailCount());
   }
 }

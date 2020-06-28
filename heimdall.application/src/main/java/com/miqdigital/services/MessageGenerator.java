@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.miqdigital.dto.NotificationDto;
 import com.miqdigital.execution.dto.ExecutionInfo;
 import com.miqdigital.scenario.dto.ScenarioInfo;
-import com.miqdigital.slack.dto.SlackMessageInfo;
+import com.miqdigital.dto.ResultDto;
 
 /**
  * This class builds the Slack message and the failed test scenarios report, if any.
@@ -14,20 +15,15 @@ import com.miqdigital.slack.dto.SlackMessageInfo;
 
 public class MessageGenerator {
 
-  private MessageGenerator() {
-  }
-
-  public static SlackMessageInfo getMessage(final ExecutionInfo executionInfo) {
-    return sendSlackNotification(executionInfo);
-  }
-
   /**
    * Sends the build notification to the Slack channel.
    *
    * @param executionInfo test execution info
+   * @param notificationDto
    * @return slack notification info
    */
-  private static SlackMessageInfo sendSlackNotification(final ExecutionInfo executionInfo) {
+  public static ResultDto getBuildResult(final ExecutionInfo executionInfo,
+      NotificationDto notificationDto) {
     final StringBuilder testExecutionInfo = new StringBuilder();
     StringBuilder failedTestsInfo = new StringBuilder();
 
@@ -46,11 +42,11 @@ public class MessageGenerator {
     if (Objects.nonNull(executionInfo.BuildNumber) && Objects
         .nonNull(System.getProperty("viewName"))) {
       testExecutionInfo.append("\n").append("*Console out:* ").append(String
-          .format("https://builds-corp.mediaiqdigital.com/view/%s/job/%s/%s/console",
+          .format(notificationDto.getJenkinsDomain() + "/view/%s/job/%s/%s/console",
               System.getProperty("viewName"), executionInfo.BuildName, executionInfo.BuildNumber));
     }
 
-    return SlackMessageInfo.builder().testExecutionInfo(testExecutionInfo)
+    return ResultDto.builder().testExecutionInfo(testExecutionInfo)
         .failedTestDescription(failedTestsInfo).failedTestCount(executionInfo.failTestCount)
         .build();
   }
