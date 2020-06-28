@@ -1,12 +1,10 @@
-package com.miqdigital.utility;
+package com.miqdigital.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 
@@ -15,11 +13,6 @@ import lombok.Getter;
  */
 @Getter
 public class ReadProperties {
-
-  /**
-   * Logger.
-   */
-  private static final Logger LOGGER = LoggerFactory.getLogger(ReadProperties.class);
 
   /**
    * The constant heimdallBotToken.
@@ -48,7 +41,7 @@ public class ReadProperties {
   /**
    * The constant emailPort.
    */
-  private String emailPort;
+  private String smtpPort;
   /**
    * The constant emailSubject.
    */
@@ -65,7 +58,7 @@ public class ReadProperties {
   /**
    * The host to use while sending email.
    */
-  private String emailHost;
+  private String smtpHost;
   /**
    * The SMTP username.
    */
@@ -101,13 +94,13 @@ public class ReadProperties {
     heimdallBotToken = properties.getProperty("HEIMDALL_BOT_TOKEN");
     jiraPrefix = properties.getProperty("JIRA_PREFIX");
     s3BucketName = properties.getProperty("S3_BUCKETNAME");
-    emailHost = properties.getProperty("EMAIL_HOST");
+    smtpHost = properties.getProperty("EMAIL_HOST");
     smtpUsername = properties.getProperty("SMTP_USERNAME");
     smtpPassword = properties.getProperty("SMTP_PASSWORD");
     notifyEmail = Boolean.parseBoolean(properties.getProperty("NOTIFY_EMAIL"));
     emailTo = properties.getProperty("EMAIL_TO");
     emailFrom = properties.getProperty("EMAIL_FROM");
-    emailPort = properties.getProperty("EMAIL_PORT");
+    smtpPort = properties.getProperty("EMAIL_PORT");
     emailSubject = properties.getProperty("EMAIL_SUBJECT");
     jenkinsDomain = properties.getProperty("JENKINS_DOMAIN");
   }

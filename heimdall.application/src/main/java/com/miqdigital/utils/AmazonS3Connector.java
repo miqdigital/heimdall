@@ -1,4 +1,4 @@
-package com.miqdigital.connector;
+package com.miqdigital.utils;
 
 import java.io.File;
 

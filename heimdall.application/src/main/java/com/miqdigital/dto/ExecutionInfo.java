@@ -1,9 +1,7 @@
-package com.miqdigital.execution.dto;
+package com.miqdigital.dto;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.miqdigital.scenario.dto.ScenarioInfo;
 
 import lombok.Builder;
 

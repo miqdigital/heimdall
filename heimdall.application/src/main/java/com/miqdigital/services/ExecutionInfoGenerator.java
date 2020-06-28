@@ -1,4 +1,4 @@
-package com.miqdigital.execution;
+package com.miqdigital.services;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -14,9 +14,9 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.miqdigital.execution.dto.ExecutionInfo;
-import com.miqdigital.scenario.dto.ScenarioInfo;
-import com.miqdigital.scenario.dto.ScenarioStep;
+import com.miqdigital.dto.ExecutionInfo;
+import com.miqdigital.dto.ScenarioInfo;
+import com.miqdigital.dto.ScenarioStep;
 import com.miqdigital.utils.ReadProperties;
 
 import net.masterthought.cucumber.Configuration;
@@ -50,15 +50,15 @@ public class ExecutionInfoGenerator {
   /**
    * Gets the list of all scenario tags.
    *
-   * @param cucumberOutputPath pass cucumber result output path e.g target/cucumber-html-reports
+   * @param executionOutputPath pass cucumber result output path e.g target/cucumber-html-reports
    * @return lis of all cucumber tags
    * @throws NoSuchFieldException   noSuchFieldException
    * @throws IllegalAccessException illegalAccessException
    */
-  private List<TagObject> getListOfTags(final String cucumberOutputPath)
+  private List<TagObject> getListOfTags(final String executionOutputPath)
       throws NoSuchFieldException, IllegalAccessException {
     final Collection<File> jsonFiles =
-        FileUtils.listFiles(new File(cucumberOutputPath), new String[] {"json"}, true);
+        FileUtils.listFiles(new File(executionOutputPath), new String[] {"json"}, true);
     final List<String> jsonPaths = new ArrayList<>(jsonFiles.size());
     jsonFiles.forEach(file -> jsonPaths.add(file.getAbsolutePath()));
     final Configuration config = new Configuration(new File("target"), "demo");
@@ -82,7 +82,6 @@ public class ExecutionInfoGenerator {
       final String projectJiraPrefix) {
     final List<ScenarioInfo> scenarioInfoList = new LinkedList<>();
     for (final TagObject tag : alltags) {
-      LOGGER.info("Parsing tags: {}", tag.getName());
       if (tag.getScenarios() >= 1) {
         final ScenarioInfo.ScenarioInfoBuilder scenarioInfoBuilder =
             ScenarioInfo.builder().scenarioTagId(tag.getName()).scenarioTotalSteps(tag.getSteps())

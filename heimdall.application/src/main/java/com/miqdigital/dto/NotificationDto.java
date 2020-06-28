@@ -5,15 +5,18 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class EmailDto {
-  private final String emailHost;
-  private final String smtpUsername;
-  private final String smtpPassword;
+public class NotificationDto {
+  private final String slackChannel;
+  private final String heimdallBotToken;
   private final boolean notifySlack;
   private final boolean notifyEmail;
   private final String emailTo;
   private final String emailFrom;
-  private final String subject;
+  private final String smtpHost;
+  private final String smtpPort;
+  private final String smtpUsername;
+  private final String smtpPassword;
+  private final String emailSubject;
   private final String jenkinsDomain;
 
 }

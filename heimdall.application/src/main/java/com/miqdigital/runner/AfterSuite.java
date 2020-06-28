@@ -1,4 +1,4 @@
-package com.miqdigital.cucumber_runner;
+package com.miqdigital.runner;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

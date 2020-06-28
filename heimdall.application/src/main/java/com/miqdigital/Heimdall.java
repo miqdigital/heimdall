@@ -2,7 +2,9 @@ package com.miqdigital;
 
 import java.io.IOException;
 
-import com.miqdigital.reporting.HeimdallReporting;
+import javax.mail.MessagingException;
+
+import com.miqdigital.services.HeimdallReporting;
 
 /**
  * This class uses the instance of Heimdall Reporting.
@@ -19,11 +21,12 @@ public class Heimdall {
    * @throws NoSuchFieldException   noSuchFieldException
    * @throws IllegalAccessException illegalAccessException
    */
-  public void updateStatusInS3AndNotifySlack(final String pathOfRunnerPropertiesFile,
+  public void updateStatusInS3AndNotify(final String pathOfRunnerPropertiesFile,
       final String executionOutputPath)
-      throws InterruptedException, IOException, IllegalAccessException, NoSuchFieldException {
+      throws InterruptedException, IOException, IllegalAccessException, NoSuchFieldException,
+      MessagingException {
     this.heimdallReporting = new HeimdallReporting(pathOfRunnerPropertiesFile, executionOutputPath);
-    heimdallReporting.updateStatusInS3AndNotifySlack();
+    heimdallReporting.updateStatusInS3AndNotify();
   }
 
   /**

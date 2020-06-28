@@ -1,4 +1,4 @@
-package com.miqdigital.scenario.dto;
+package com.miqdigital.dto;
 
 import lombok.Builder;
 

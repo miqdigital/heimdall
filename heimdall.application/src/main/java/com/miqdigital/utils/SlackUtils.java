@@ -1,4 +1,4 @@
-package com.miqdigital.slack;
+package com.miqdigital.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +14,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import com.miqdigital.dto.NotificationDto;
-import com.miqdigital.dto.ResultDto;
+import com.miqdigital.dto.BuildResultDto;
 
 /**
  * This class is used to post Slack notification on provided channel.
  */
-
 public class SlackUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(SlackUtils.class);
@@ -32,16 +32,16 @@ public class SlackUtils {
    * Makes Http post request to Slack to send the notification and upload the failed scenarios file.
    *
    * @param notificationDto slack channel details and token
-   * @param resultDto slack notification
+   * @param buildResultDto slack notification
    */
   public void sendSlackNotification(final NotificationDto notificationDto,
-      final ResultDto resultDto) throws IOException {
+      final BuildResultDto buildResultDto) throws IOException {
     final HttpClient httpclient = HttpClientBuilder.create().disableContentCompression().build();
-    final HttpPost httpPost = resultDto.failedTestCount == 0 ?
+    final HttpPost httpPost = buildResultDto.failedTestCount == 0 ?
         new HttpPost(CHAT_POST_URL) :
         new HttpPost(FILE_UPLOAD_URL);
 
-    final HttpEntity httpEntity = getHttpRequestEntity(notificationDto, resultDto).build();
+    final HttpEntity httpEntity = getHttpRequestEntity(notificationDto, buildResultDto).build();
     httpPost.setEntity(httpEntity);
     final HttpResponse execute = httpclient.execute(httpPost);
     logger.info(execute.getStatusLine().getReasonPhrase());
@@ -51,27 +51,30 @@ public class SlackUtils {
    * Configures the Http request for Slack.
    *
    * @param notificationDto
-   * @param resultDto
+   * @param buildResultDto
    * @return
    * @throws IOException
    */
   public MultipartEntityBuilder getHttpRequestEntity(final NotificationDto notificationDto,
-      final ResultDto resultDto) throws IOException {
+      final BuildResultDto buildResultDto) throws IOException {
     final MultipartEntityBuilder reqEntity =
-        MultipartEntityBuilder.create().addTextBody("token", notificationDto.getSlackToken());
-    if (resultDto.failedTestCount == 0) {
+        MultipartEntityBuilder.create().addTextBody("token", notificationDto.getHeimdallBotToken());
+    if (buildResultDto.failedTestCount == 0) {
       //soft slack notification
-      reqEntity.addTextBody("channel", notificationDto.getSlackChannel())
-          .addTextBody("as_user", "true")
-          .addTextBody("text", resultDto.testExecutionInfo.toString());
-    } else {
-      //slack notification with @here
       final String generatedFileName = Files.write(Paths.get(ATTACHMENT_FILE_NAME),
-          resultDto.failedTestDescription.toString().getBytes()).normalize().toAbsolutePath()
+          buildResultDto.failedTestDescription.toString().getBytes()).normalize().toAbsolutePath()
           .toString();
       reqEntity.addBinaryBody("file", new File(generatedFileName))
           .addTextBody("channels", notificationDto.getSlackChannel()).addTextBody("media", "file")
-          .addTextBody("initial_comment", "<!here> " + resultDto.testExecutionInfo.toString());
+          .addTextBody("initial_comment", "<!here> " + buildResultDto.testExecutionInfo.toString());
+    } else {
+      //slack notification with @here
+      final String generatedFileName = Files.write(Paths.get(ATTACHMENT_FILE_NAME),
+          buildResultDto.failedTestDescription.toString().getBytes()).normalize().toAbsolutePath()
+          .toString();
+      reqEntity.addBinaryBody("file", new File(generatedFileName))
+          .addTextBody("channels", notificationDto.getSlackChannel()).addTextBody("media", "file")
+          .addTextBody("initial_comment", "<!here> " + buildResultDto.testExecutionInfo.toString());
     }
     return reqEntity;
   }

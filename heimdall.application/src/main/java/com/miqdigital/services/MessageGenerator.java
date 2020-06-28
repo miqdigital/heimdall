@@ -1,19 +1,27 @@
-package com.miqdigital.slack;
+package com.miqdigital.services;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.miqdigital.dto.NotificationDto;
-import com.miqdigital.execution.dto.ExecutionInfo;
-import com.miqdigital.scenario.dto.ScenarioInfo;
-import com.miqdigital.dto.ResultDto;
+import com.miqdigital.dto.ExecutionInfo;
+import com.miqdigital.dto.ScenarioInfo;
+import com.miqdigital.dto.BuildResultDto;
 
 /**
  * This class builds the Slack message and the failed test scenarios report, if any.
  */
 
 public class MessageGenerator {
+
+  private MessageGenerator() {
+  }
+
+  public static BuildResultDto getBuildResult(final ExecutionInfo executionInfo,
+      NotificationDto notificationDto) {
+    return getBuildResponse(executionInfo, notificationDto);
+  }
 
   /**
    * Sends the build notification to the Slack channel.
@@ -22,7 +30,7 @@ public class MessageGenerator {
    * @param notificationDto
    * @return slack notification info
    */
-  public static ResultDto getBuildResult(final ExecutionInfo executionInfo,
+  private static BuildResultDto getBuildResponse(final ExecutionInfo executionInfo,
       NotificationDto notificationDto) {
     final StringBuilder testExecutionInfo = new StringBuilder();
     StringBuilder failedTestsInfo = new StringBuilder();
@@ -41,12 +49,13 @@ public class MessageGenerator {
 
     if (Objects.nonNull(executionInfo.BuildNumber) && Objects
         .nonNull(System.getProperty("viewName"))) {
+      String jenkinsJobUrl = notificationDto.getJenkinsDomain() + "/view/%s/job/%s/%s/console";
       testExecutionInfo.append("\n").append("*Console out:* ").append(String
-          .format(notificationDto.getJenkinsDomain() + "/view/%s/job/%s/%s/console",
-              System.getProperty("viewName"), executionInfo.BuildName, executionInfo.BuildNumber));
+          .format(jenkinsJobUrl, System.getProperty("viewName"), executionInfo.BuildName,
+              executionInfo.BuildNumber));
     }
 
-    return ResultDto.builder().testExecutionInfo(testExecutionInfo)
+    return BuildResultDto.builder().testExecutionInfo(testExecutionInfo)
         .failedTestDescription(failedTestsInfo).failedTestCount(executionInfo.failTestCount)
         .build();
   }
