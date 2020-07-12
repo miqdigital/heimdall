@@ -1,14 +1,12 @@
-package com.miqdigital.execution.dto;
+package com.miqdigital.dto;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.miqdigital.scenario.dto.ScenarioInfo;
-
 import lombok.Builder;
 
 @Builder
-public class ExecutionInfo {
+public class ExecutionInfoDto {
   public String environment;
   public String testType;
   public String dateTime;
@@ -17,14 +15,14 @@ public class ExecutionInfo {
   public long failTestCount;
   public String BuildName;
   public String BuildNumber;
-  public List<ScenarioInfo> scenarioInfoList;
+  public List<ScenarioInfoDto> scenarioInfoDtoList;
 
   @Override
   public String toString() {
-    return "ExecutionInfo{" + "environment='" + environment + '\'' + ", testType='" + testType
+    return "ExecutionInfoDto{" + "environment='" + environment + '\'' + ", testType='" + testType
         + '\'' + ", dateTime='" + dateTime + '\'' + ", totalTests=" + totalTests
         + ", passTestCount=" + passTestCount + ", failTestCount=" + failTestCount + ", BuildName='"
-        + BuildName + '\'' + ", BuildNumber='" + BuildNumber + '\'' + ", scenarioInfoList=" + Arrays
-        .toString(scenarioInfoList.toArray()) + '}';
+        + BuildName + '\'' + ", BuildNumber='" + BuildNumber + '\'' + ", scenarioInfoDtoList="
+        + Arrays.toString(scenarioInfoDtoList.toArray()) + '}';
   }
 }

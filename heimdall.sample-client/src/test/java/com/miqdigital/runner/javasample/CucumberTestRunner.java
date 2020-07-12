@@ -1,11 +1,13 @@
-package com.miqdigital.cucumber_runner.javasample;
+package com.miqdigital.runner.javasample;
 
 import java.io.IOException;
+
+import javax.mail.MessagingException;
 
 import org.junit.runner.RunWith;
 
 import com.miqdigital.Heimdall;
-import com.miqdigital.cucumber_runner.ExtendedCucumberRunner;
+import com.miqdigital.runner.ExtendedCucumberRunner;
 
 import cucumber.api.CucumberOptions;
 
@@ -34,8 +36,9 @@ public class CucumberTestRunner {
    * @throws IOException            the io exception
    */
   public void heimdallReporting()
-      throws IllegalAccessException, NoSuchFieldException, InterruptedException, IOException {
+      throws IllegalAccessException, NoSuchFieldException, InterruptedException, IOException,
+      MessagingException {
     final Heimdall heimdall = new Heimdall();
-    heimdall.updateStatusInS3AndNotifySlack(pathOfPropertyFile, cucumberOutputPath);
+    heimdall.updateStatusInS3AndNotify(pathOfPropertyFile, cucumberOutputPath);
   }
 }

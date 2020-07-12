@@ -13,11 +13,20 @@
 - Create a Slack channel to receive build notifications of the projects.
 - Create a properties file for the automation module. It should contain the following fields.
     
-    1. HEIMDALL_BOT_TOKEN - the  the Slack token for BOT or user.
-    2. CHANNEL_NAME - the channel for the build notifications.
-    3. ISNOTIFYSLACK - this field can be true or false, accordingly.
-    4. JIRA_PREFIX - the JIRA ticket prefix assigned to the team.
-    5. S3_BUCKETNAME - the S3 bucket where the build results are pushed.
+        1. HEIMDALL_BOT_TOKEN - the  the Slack token for BOT or user.
+        2. CHANNEL_NAME - the channel for the build notifications.
+        3. NOTIFY_SLACK - this field can be true or false, accordingly.
+        4. JIRA_PREFIX - the JIRA ticket prefix assigned to the team.
+        5. S3_BUCKETNAME - the S3 bucket where the build results are pushed.
+        6. NOTIFY_EMAIL - this field can be true or false, accordingly.
+        7. EMAIL_HOST - your email host. For example - smtp.gmail.com
+        8. SMTP_USERNAME - the email by which report is to be sent.
+        9. SMTP_PASSWORD - the app password. This is not the account password.
+        10. EMAIL_TO - the email recipient.
+        11. EMAIL_FROM - the email sender.
+        12. EMAIL_PORT - the smtp port. For gmail, it's 587.
+        13. EMAIL_SUBJECT - the email subject.
+        14. JENKINS_DOMAIN - the jenkins domain of the jobs.
     
     An example of properties file is given under heimdall.sample-client/src/test/resources/properties, named runner.properties.
     
@@ -35,10 +44,10 @@
         4. Heimdall heimdall = new Heimdall(); 
      Generate an instance of the Heimdall class.
 
-        5. heimdall.updateStatusInS3AndNotifySlack(pathOfPropertyFile, karateOutputPath)
-     Call the updateStatusInS3AndNotifySlack with the Heimdall instance and pass
+        5. heimdall.updateStatusInS3AndNotify(pathOfPropertyFile, karateOutputPath)
+     Call the updateStatusInS3AndNotify with the Heimdall instance and pass
      pathOfPropertyFile and karateOutputPath as parameters. This method pushes the build
-     information of tests to S3 and notifies the Slack channel of the same.
+     information of tests to S3 and notifies the same.
 
 ### Steps for writing scenarios:
 

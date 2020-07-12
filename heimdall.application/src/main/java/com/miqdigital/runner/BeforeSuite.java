@@ -1,4 +1,4 @@
-package com.miqdigital.cucumber_runner;
+package com.miqdigital.runner;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The interface After suite.
+ * The interface Before suite.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface AfterSuite {
+public @interface BeforeSuite {
 
 }

@@ -1,4 +1,4 @@
-package com.miqdigital.cucumber_runner.kotlinesample
+package com.miqdigital.runner.kotlinesample
 
 import com.intuit.karate.KarateOptions
 import com.intuit.karate.Results
@@ -15,8 +15,8 @@ import java.io.IOException
 class KarateTestRunner {
 
 
-  private val pathOfPropertyFile = ""
-  private val karateOutputPath = ""
+  private val pathOfPropertyFile = "src/test/resources/properties/runner.properties"
+  private val karateOutputPath = "target/cucumber-reports"
 
   /**
    * Heimdall reporting.
@@ -33,7 +33,7 @@ class KarateTestRunner {
     val results: Results = Runner.path(karateOutputPath).tags("@regression").parallel(10)
 
     val heimdall = Heimdall()
-    heimdall.updateStatusInS3AndNotifySlack(pathOfPropertyFile, karateOutputPath)
+    heimdall.updateStatusInS3AndNotify(pathOfPropertyFile, karateOutputPath)
     assertEquals("There are scenario failures", 0, results.failCount.toLong())
   }
 }
