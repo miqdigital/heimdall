@@ -14,9 +14,9 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.miqdigital.dto.ExecutionInfo;
-import com.miqdigital.dto.ScenarioInfo;
-import com.miqdigital.dto.ScenarioStep;
+import com.miqdigital.dto.ExecutionInfoDto;
+import com.miqdigital.dto.ScenarioInfoDto;
+import com.miqdigital.dto.ScenarioStepDto;
 import com.miqdigital.utils.ReadProperties;
 
 import net.masterthought.cucumber.Configuration;
@@ -40,7 +40,7 @@ public class ExecutionInfoGenerator {
    * @throws IllegalAccessException
    * @throws NoSuchFieldException
    */
-  public ExecutionInfo getBuildExecutionDetails(final ReadProperties readProperties,
+  public ExecutionInfoDto getBuildExecutionDetails(final ReadProperties readProperties,
       final String executionOutputPath) throws IllegalAccessException, NoSuchFieldException {
     final List<TagObject> listOfTags = getListOfTags(executionOutputPath);
     LOGGER.info("Tags generated Successfully");
@@ -74,17 +74,18 @@ public class ExecutionInfoGenerator {
   /**
    * Method to parse cucumber annotation no project level.
    *
-   * @param alltags           list of all cucumber tags
+   * @param alltags list of all cucumber tags
    * @param projectJiraPrefix project jira prifix JA, JC
    * @return list of scenation info
    */
-  private List<ScenarioInfo> parseAnnotations(final List<TagObject> alltags,
+  private List<ScenarioInfoDto> parseAnnotations(final List<TagObject> alltags,
       final String projectJiraPrefix) {
-    final List<ScenarioInfo> scenarioInfoList = new LinkedList<>();
+    final List<ScenarioInfoDto> scenarioInfoDtoList = new LinkedList<>();
     for (final TagObject tag : alltags) {
       if (tag.getScenarios() >= 1) {
-        final ScenarioInfo.ScenarioInfoBuilder scenarioInfoBuilder =
-            ScenarioInfo.builder().scenarioTagId(tag.getName()).scenarioTotalSteps(tag.getSteps())
+        final ScenarioInfoDto.ScenarioInfoDtoBuilder scenarioInfoBuilder =
+            ScenarioInfoDto.builder().scenarioTagId(tag.getName())
+                .scenarioTotalSteps(tag.getSteps())
                 .scenarioTotalDuration(tag.getFormattedDuration());
 
         final net.masterthought.cucumber.json.Element element = tag.getElements().get(0);
@@ -93,25 +94,25 @@ public class ExecutionInfoGenerator {
             .featureFile(element.getFeature().getReportFileName())
             .scenarioStatus(tag.getStatus().toString());
         if (!tag.getStatus().isPassed()) {
-          final ScenarioStep scenarioStep = parseFailedTag(tag);
-          scenarioInfoBuilder.scenarioStep(scenarioStep);
+          final ScenarioStepDto scenarioStepDto = parseFailedTag(tag);
+          scenarioInfoBuilder.scenarioStepDto(scenarioStepDto);
         }
-        final ScenarioInfo scenarioInfo = scenarioInfoBuilder.build();
-        scenarioInfoList.add(scenarioInfo);
+        final ScenarioInfoDto scenarioInfoDto = scenarioInfoBuilder.build();
+        scenarioInfoDtoList.add(scenarioInfoDto);
       }
     }
-    return scenarioInfoList.stream().filter(f -> f.getScenarioTagId().contains(projectJiraPrefix))
-        .collect(Collectors.toList());
+    return scenarioInfoDtoList.stream()
+        .filter(f -> f.getScenarioTagId().contains(projectJiraPrefix)).collect(Collectors.toList());
   }
 
   /**
-   * Method to create ScenarioStep in case of scenario failure.
+   * Method to create ScenarioStepDto in case of scenario failure.
    *
    * @param tag Tagobject for which scenario failed
    * @return Scenario Step
    */
-  private ScenarioStep parseFailedTag(final TagObject tag) {
-    final ScenarioStep.ScenarioStepBuilder scenarioStepBuilder = ScenarioStep.builder();
+  private ScenarioStepDto parseFailedTag(final TagObject tag) {
+    final ScenarioStepDto.ScenarioStepDtoBuilder scenarioStepBuilder = ScenarioStepDto.builder();
     Arrays.stream(tag.getElements().get(0).getSteps())
         .filter(s -> !s.getResult().getStatus().isPassed()).peek(
         f -> scenarioStepBuilder.errMessage(f.getResult().getErrorMessage())
@@ -126,19 +127,19 @@ public class ExecutionInfoGenerator {
    * @param alltags        List of all the tags present in a feature file
    * @param readProperties readProperties
    */
-  private ExecutionInfo getBuildDetails(final List<TagObject> alltags,
+  private ExecutionInfoDto getBuildDetails(final List<TagObject> alltags,
       final ReadProperties readProperties) {
-    final List<ScenarioInfo> scenarioInfoList =
+    final List<ScenarioInfoDto> scenarioInfoDtoList =
         parseAnnotations(alltags, readProperties.getJiraPrefix());
     final long passedTestCount =
-        scenarioInfoList.stream().filter(r -> r.getScenarioStatus().equals("PASSED")).count();
+        scenarioInfoDtoList.stream().filter(r -> r.getScenarioStatus().equals("PASSED")).count();
     final long failedTestCount =
-        scenarioInfoList.stream().filter(r -> r.getScenarioStatus().equals("FAILED")).count();
+        scenarioInfoDtoList.stream().filter(r -> r.getScenarioStatus().equals("FAILED")).count();
 
-    return ExecutionInfo.builder().environment(System.getProperty("environment"))
+    return ExecutionInfoDto.builder().environment(System.getProperty("environment"))
         .testType(System.getProperty("tags")).dateTime(LocalDateTime.now().toString())
-        .scenarioInfoList(scenarioInfoList).passTestCount(passedTestCount)
-        .failTestCount(failedTestCount).totalTests(scenarioInfoList.size())
+        .scenarioInfoDtoList(scenarioInfoDtoList).passTestCount(passedTestCount)
+        .failTestCount(failedTestCount).totalTests(scenarioInfoDtoList.size())
         .BuildName(System.getProperty("JOB_NAME")).BuildNumber(System.getProperty("BUILD_NUMBER"))
         .build();
   }

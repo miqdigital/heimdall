@@ -14,15 +14,16 @@ import com.amazonaws.util.StringUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.miqdigital.utils.AmazonS3Connector;
-import com.miqdigital.dto.NotificationDto;
-import com.miqdigital.dto.ExecutionInfo;
-import com.miqdigital.utils.SlackUtils;
 import com.miqdigital.dto.BuildResultDto;
+import com.miqdigital.dto.EmailDto;
+import com.miqdigital.dto.ExecutionInfoDto;
+import com.miqdigital.dto.SlackDto;
+import com.miqdigital.utils.AmazonS3Connector;
 import com.miqdigital.utils.EmailUtil;
 import com.miqdigital.utils.ReadProperties;
+import com.miqdigital.utils.SlackUtils;
 
-import cucumber.runtime.CucumberException;
+import io.cucumber.core.exception.CucumberException;
 
 /**
  * This class uploads the build status to S3 and notifies the Slack channel.
@@ -31,8 +32,8 @@ public class HeimdallReporting {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HeimdallReporting.class);
 
-  private ReadProperties properties;
-  private String executionOutputPath;
+  private final ReadProperties properties;
+  private final String executionOutputPath;
 
   public HeimdallReporting(final String pathOfRunnerPropertiesFile,
       final String executionOutputPath) throws IOException {
@@ -49,57 +50,52 @@ public class HeimdallReporting {
   /**
    * Sends the notification on the Slack channel.
    *
-   * @param executionInfo Jenkins build execution info
-   * @param notificationDto slack channel info from client
+   * @param buildResultDto Jenkins build execution info
+   * @param slackDto slack channel info from client
    */
-  private static void sendSlackNotification(final ExecutionInfo executionInfo,
-      final NotificationDto notificationDto) throws IOException {
-    final BuildResultDto buildResultDto =
-        MessageGenerator.getBuildResult(executionInfo, notificationDto);
+  private static void sendSlackNotification(final BuildResultDto buildResultDto,
+      final SlackDto slackDto) throws IOException {
     SlackUtils slackUtils = new SlackUtils();
 
-    slackUtils.sendSlackNotification(notificationDto, buildResultDto);
+    slackUtils.sendSlackNotification(slackDto, buildResultDto);
     LOGGER.info("Slack Notification Sent");
-
   }
 
   /**
    * Sends Email notification.
    *
-   * @param executionInfo
-   * @param notificationDto
+   * @param buildResultDto
+   * @param emailDto
    */
-  private static void sendEmailNotification(ExecutionInfo executionInfo,
-      NotificationDto notificationDto) throws MessagingException, IOException {
-    final BuildResultDto buildResultDto =
-        MessageGenerator.getBuildResult(executionInfo, notificationDto);
+  private static void sendEmailNotification(final BuildResultDto buildResultDto, EmailDto emailDto)
+      throws MessagingException, IOException {
 
-    EmailUtil.sendEmail(notificationDto, buildResultDto);
+    EmailUtil.sendEmail(emailDto, buildResultDto);
     LOGGER.info("Email Sent");
-
   }
 
   /**
    * Pushes to S3 only if jenkins buildNumber is present.
    *
    * @param bucketName pass the S3 bucketName
-   * @param executionInfo test execution info
+   * @param executionInfoDto test execution info
    */
-  private void pushResultToS3(final String bucketName, final ExecutionInfo executionInfo)
+  private void pushResultToS3(final String bucketName, final ExecutionInfoDto executionInfoDto)
       throws IOException, InterruptedException {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    if (Objects.nonNull(executionInfo.BuildNumber)) {
+    if (Objects.nonNull(executionInfoDto.BuildNumber)) {
       final String outputReportPath =
-          System.getProperty("user.dir") + "/target/" + executionInfo.BuildNumber + ".json";
+          System.getProperty("user.dir") + "/target/" + executionInfoDto.BuildNumber + ".json";
 
       try (final FileWriter writer = new FileWriter(outputReportPath)) {
-        objectMapper.writeValue(writer, executionInfo);
+        objectMapper.writeValue(writer, executionInfoDto);
       }
       final AmazonS3Connector amazonS3Connector = new AmazonS3Connector.Builder().build();
-      final String prefix = executionInfo.BuildName + "/" + executionInfo.BuildNumber + ".json";
+      final String prefix =
+          executionInfoDto.BuildName + "/" + executionInfoDto.BuildNumber + ".json";
       amazonS3Connector.uploadFile(outputReportPath, bucketName, prefix);
     } else {
       LOGGER.info("Build number is null, not pushing build result to S3");
@@ -117,10 +113,10 @@ public class HeimdallReporting {
   public void updateStatusInS3()
       throws IllegalAccessException, NoSuchFieldException, IOException, InterruptedException {
     ExecutionInfoGenerator executionInfoGenerator = new ExecutionInfoGenerator();
-    ExecutionInfo executionInfo =
+    ExecutionInfoDto executionInfoDto =
         executionInfoGenerator.getBuildExecutionDetails(properties, executionOutputPath);
 
-    pushResultToS3(properties.getS3BucketName(), executionInfo);
+    pushResultToS3(properties.getS3BucketName(), executionInfoDto);
   }
 
   /**
@@ -133,7 +129,7 @@ public class HeimdallReporting {
       throws NoSuchFieldException, IllegalAccessException, IOException, InterruptedException,
       MessagingException {
     ExecutionInfoGenerator executionInfoGenerator = new ExecutionInfoGenerator();
-    ExecutionInfo executionInfo =
+    ExecutionInfoDto executionInfoDto =
         executionInfoGenerator.getBuildExecutionDetails(properties, executionOutputPath);
 
     if (StringUtils.isNullOrEmpty(properties.getChannelName()) || StringUtils
@@ -141,24 +137,29 @@ public class HeimdallReporting {
       throw new NullPointerException(
           "Please specify Channel name and Slack bot token in runner properties file");
     }
-    final NotificationDto notificationDto =
-        NotificationDto.builder().smtpHost(properties.getSmtpHost())
-            .slackChannel(properties.getChannelName())
-            .heimdallBotToken(properties.getHeimdallBotToken())
-            .notifySlack(properties.isNotifySlack()).smtpUsername(properties.getSmtpUsername())
-            .smtpPassword(properties.getSmtpPassword()).notifyEmail(properties.isNotifyEmail())
-            .emailSubject(properties.getEmailSubject()).emailFrom(properties.getEmailFrom())
-            .emailTo(properties.getEmailTo()).smtpPort(properties.getSmtpPort())
-            .jenkinsDomain(properties.getJenkinsDomain()).build();
+
+    SlackDto slackDto = SlackDto.builder().slackChannel(properties.getChannelName())
+        .heimdallBotToken(properties.getHeimdallBotToken()).notifySlack(properties.isNotifySlack())
+        .build();
+
+    final EmailDto emailDto = EmailDto.builder().smtpHost(properties.getSmtpHost())
+        .smtpUsername(properties.getSmtpUsername()).smtpPassword(properties.getSmtpPassword())
+        .notifyEmail(properties.isNotifyEmail()).emailSubject(properties.getEmailSubject())
+        .emailFrom(properties.getEmailFrom()).emailTo(properties.getEmailTo())
+        .smtpPort(properties.getSmtpPort()).build();
 
     LOGGER.info("Execution info generated Successfully");
-    if (notificationDto.isNotifySlack()) {
-      sendSlackNotification(executionInfo, notificationDto);
+
+    final BuildResultDto buildResultDto =
+        MessageGenerator.getBuildResult(executionInfoDto, properties.getJenkinsDomain());
+
+    if (slackDto.isNotifySlack()) {
+      sendSlackNotification(buildResultDto, slackDto);
     }
-    if (notificationDto.isNotifyEmail()) {
-      sendEmailNotification(executionInfo, notificationDto);
+    if (emailDto.isNotifyEmail()) {
+      sendEmailNotification(buildResultDto, emailDto);
     }
-    pushResultToS3(properties.getS3BucketName(), executionInfo);
+    pushResultToS3(properties.getS3BucketName(), executionInfoDto);
   }
 
 }
