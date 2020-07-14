@@ -43,7 +43,7 @@ public class MessageGenerator {
       testExecutionInfo.append("*BUILD PASSED ").append(jenkinsBuildInfo);
     }
 
-    if (Objects.nonNull(executionInfo.BuildName) && Objects
+    if (Objects.nonNull(executionInfo.BuildNumber) && Objects
         .nonNull(System.getProperty("viewName"))) {
       testExecutionInfo.append("\n").append("*Console out:* ").append(String
           .format("https://builds-corp.mediaiqdigital.com/view/%s/job/%s/%s/console",
