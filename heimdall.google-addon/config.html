@@ -26,6 +26,7 @@
           document.getElementById("jenkinsJobCategory").value = obj.jenkinsJobCategory;
           document.getElementById("s3AccessKey").value = obj.s3AccessKey;
           document.getElementById("s3SecretKey").value = obj.s3SecretKey;
+          document.getElementById("s3BucketName").value = obj.s3BucketName;
        }).getAuthValues();
        closeHelp();
    }
@@ -37,13 +38,15 @@
      var jenkinsJobCategory = $("#jenkinsJobCategory").val();
      var s3AccessKey =  $("#s3AccessKey").val();
      var s3SecretKey = $("#s3SecretKey").val();
+     var s3BucketName = $("#s3BucketName").val();
      var auth = {
        tokenName: tokenName,
        tokenId: tokenId,
        jenkinsDomain: jenkinsDomain,
        jenkinsJobCategory: jenkinsJobCategory,
        s3AccessKey: s3AccessKey,
-       s3SecretKey: s3SecretKey
+       s3SecretKey: s3SecretKey,
+       s3BucketName : s3BucketName
      }
      google.script.run.getAuthenticationValues(auth); 
      closeHelp();
@@ -71,6 +74,10 @@
             <label>Jenkins Job Category</label>
             <input type="text" class="form-control" id="jenkinsJobCategory"
                    placeholder="Enter Job Category">
+        </div>
+        <div class="form-group">
+            <label>S3 Bucket Name</label>
+           <input type="text" class="form-control" id="s3BucketName" placeholder="Enter S3 Bucket Name">
         </div>
         <div class="form-group">
             <label>S3 Access Key</label>
