@@ -66,16 +66,16 @@ public class HeimdallReporting {
       throws IOException, InterruptedException {
 
     LOGGER.info("Execution Result {}", executionInfo);
-    if (Objects.nonNull(executionInfo.buildNumber)) {
+    if (Objects.nonNull(executionInfo.BuildNumber)) {
       final Gson gson = new Gson();
       final String outputReportPath =
-          System.getProperty("user.dir") + "/target/" + executionInfo.buildNumber + ".json";
+          System.getProperty("user.dir") + "/target/" + executionInfo.BuildNumber + ".json";
 
       try (final FileWriter writer = new FileWriter(outputReportPath)) {
         gson.toJson(executionInfo, writer);
       }
       final AmazonS3Connector amazonS3Connector = new AmazonS3Connector.Builder().build();
-      final String prefix = executionInfo.buildName + "/" + executionInfo.buildNumber + ".json";
+      final String prefix = executionInfo.BuildName + "/" + executionInfo.BuildNumber + ".json";
       amazonS3Connector.uploadFile(outputReportPath, bucketName, prefix);
     } else {
       LOGGER.error("Build number is null, not pushing build result to S3");

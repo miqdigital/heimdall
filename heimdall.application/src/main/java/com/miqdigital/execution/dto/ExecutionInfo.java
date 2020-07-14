@@ -9,22 +9,22 @@ import lombok.Builder;
 
 @Builder
 public class ExecutionInfo {
-  public String environment;
-  public String testType;
+  public String Environment;
+  public String TestType;
   public String dateTime;
   public long totalTests;
   public long passTestCount;
   public long failTestCount;
-  public String buildName;
-  public String buildNumber;
+  public String BuildName;
+  public String BuildNumber;
   public List<ScenarioInfo> scenarioInfoList;
 
   @Override
   public String toString() {
-    return "ExecutionInfo{" + "environment='" + environment + '\'' + ", testType='" + testType
+    return "ExecutionInfo{" + "environment='" + Environment + '\'' + ", testType='" + TestType
         + '\'' + ", dateTime='" + dateTime + '\'' + ", totalTests=" + totalTests
         + ", passTestCount=" + passTestCount + ", failTestCount=" + failTestCount + ", BuildName='"
-        + buildName + '\'' + ", BuildNumber='" + buildNumber + '\'' + ", scenarioInfoList=" + Arrays
+        + BuildName + '\'' + ", BuildNumber='" + BuildNumber + '\'' + ", scenarioInfoList=" + Arrays
         .toString(scenarioInfoList.toArray()) + '}';
   }
 }

@@ -43,11 +43,11 @@ public class MessageGenerator {
       testExecutionInfo.append("*BUILD PASSED ").append(jenkinsBuildInfo);
     }
 
-    if (Objects.nonNull(executionInfo.buildName) && Objects
+    if (Objects.nonNull(executionInfo.BuildName) && Objects
         .nonNull(System.getProperty("viewName"))) {
       testExecutionInfo.append("\n").append("*Console out:* ").append(String
           .format("https://builds-corp.mediaiqdigital.com/view/%s/job/%s/%s/console",
-                  System.getProperty("viewName"), executionInfo.buildName, executionInfo.buildNumber));
+                  System.getProperty("viewName"), executionInfo.BuildName, executionInfo.BuildNumber));
     }
 
     return SlackMessageInfo.builder().testExecutionInfo(testExecutionInfo)
@@ -78,9 +78,9 @@ public class MessageGenerator {
    * @return jenkins build info
    */
   private static StringBuilder getBuildInfo(final ExecutionInfo executionInfo) {
-    return new StringBuilder().append("for job:* ").append(executionInfo.buildName)
-        .append("\n*BuildNo.:* ").append(executionInfo.buildNumber).append("\n*Environment:* ")
-        .append(executionInfo.environment).append("\n*Test type:* ").append(executionInfo.testType)
+    return new StringBuilder().append("for job:* ").append(executionInfo.BuildName)
+        .append("\n*BuildNo.:* ").append(executionInfo.BuildNumber).append("\n*Environment:* ")
+        .append(executionInfo.Environment).append("\n*Test type:* ").append(executionInfo.TestType)
         .append("\n*Total tests executed:* ").append(executionInfo.totalTests)
         .append("\n*Tests Passed:* ").append(executionInfo.passTestCount);
   }
