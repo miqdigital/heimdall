@@ -9,8 +9,8 @@ import lombok.Builder;
 
 @Builder
 public class ExecutionInfo {
-  public String environment;
-  public String testType;
+  public String Environment;
+  public String TestType;
   public String dateTime;
   public long totalTests;
   public long passTestCount;
@@ -21,7 +21,7 @@ public class ExecutionInfo {
 
   @Override
   public String toString() {
-    return "ExecutionInfo{" + "environment='" + environment + '\'' + ", testType='" + testType
+    return "ExecutionInfo{" + "environment='" + Environment + '\'' + ", testType='" + TestType
         + '\'' + ", dateTime='" + dateTime + '\'' + ", totalTests=" + totalTests
         + ", passTestCount=" + passTestCount + ", failTestCount=" + failTestCount + ", BuildName='"
         + BuildName + '\'' + ", BuildNumber='" + BuildNumber + '\'' + ", scenarioInfoList=" + Arrays

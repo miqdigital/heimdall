@@ -136,11 +136,11 @@ public class ExecutionInfoGenerator {
     final long failedTestCount =
         scenarioInfoList.stream().filter(r -> r.getScenarioStatus().equals("FAILED")).count();
 
-    return ExecutionInfo.builder().environment(System.getProperty("environment"))
-        .testType(System.getProperty("tags")).dateTime(LocalDateTime.now().toString())
+    return ExecutionInfo.builder().Environment(System.getProperty("environment"))
+        .TestType(System.getProperty("tags")).dateTime(LocalDateTime.now().toString())
         .scenarioInfoList(scenarioInfoList).passTestCount(passedTestCount)
         .failTestCount(failedTestCount).totalTests(scenarioInfoList.size())
-        .BuildName(System.getProperty("JOB_NAME")).BuildNumber(System.getProperty("BUILD_NUMBER"))
+        .BuildName(System.getProperty("jobName")).BuildNumber(System.getProperty("buildNumber"))
         .build();
   }
 
