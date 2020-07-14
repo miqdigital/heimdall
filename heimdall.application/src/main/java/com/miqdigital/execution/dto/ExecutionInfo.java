@@ -15,8 +15,8 @@ public class ExecutionInfo {
   public long totalTests;
   public long passTestCount;
   public long failTestCount;
-  public String BuildName;
-  public String BuildNumber;
+  public String buildName;
+  public String buildNumber;
   public List<ScenarioInfo> scenarioInfoList;
 
   @Override
@@ -24,7 +24,7 @@ public class ExecutionInfo {
     return "ExecutionInfo{" + "environment='" + environment + '\'' + ", testType='" + testType
         + '\'' + ", dateTime='" + dateTime + '\'' + ", totalTests=" + totalTests
         + ", passTestCount=" + passTestCount + ", failTestCount=" + failTestCount + ", BuildName='"
-        + BuildName + '\'' + ", BuildNumber='" + BuildNumber + '\'' + ", scenarioInfoList=" + Arrays
+        + buildName + '\'' + ", BuildNumber='" + buildNumber + '\'' + ", scenarioInfoList=" + Arrays
         .toString(scenarioInfoList.toArray()) + '}';
   }
 }

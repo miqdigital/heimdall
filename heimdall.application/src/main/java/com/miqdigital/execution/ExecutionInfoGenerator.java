@@ -140,7 +140,7 @@ public class ExecutionInfoGenerator {
         .testType(System.getProperty("tags")).dateTime(LocalDateTime.now().toString())
         .scenarioInfoList(scenarioInfoList).passTestCount(passedTestCount)
         .failTestCount(failedTestCount).totalTests(scenarioInfoList.size())
-        .BuildName(System.getProperty("JOB_NAME")).BuildNumber(System.getProperty("BUILD_NUMBER"))
+        .buildName(System.getProperty("jobName")).buildNumber(System.getProperty("buildNumber"))
         .build();
   }
 
