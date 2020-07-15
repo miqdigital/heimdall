@@ -22,10 +22,6 @@ public class ReadProperties {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReadProperties.class);
 
   /**
-   * The constant heimdallBotToken.
-   */
-  private String heimdallBotToken;
-  /**
    * The constant channelName.
    */
   private String channelName;
@@ -62,7 +58,6 @@ public class ReadProperties {
   private void initFields() {
     channelName = properties.getProperty("CHANNEL_NAME");
     isNotifySlack = Boolean.parseBoolean(properties.getProperty("ISNOTIFYSLACK"));
-    heimdallBotToken = properties.getProperty("HEIMDALL_BOT_TOKEN");
     jiraPrefix = properties.getProperty("JIRA_PREFIX");
     s3BucketName = properties.getProperty("S3_BUCKETNAME");
   }

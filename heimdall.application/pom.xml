@@ -98,6 +98,7 @@
                         <environment>${environment}</environment>
                         <tags>${tags}</tags>
                         <viewName>${viewName}</viewName>
+                        <HeimdallSlackToken>${HeimdallSlackToken}</HeimdallSlackToken>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
