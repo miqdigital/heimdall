@@ -111,15 +111,18 @@ public class HeimdallReporting {
     ExecutionInfo executionInfo =
         executionInfoGenerator.getBuildExecutionDetails(readProperties, executionOutputPath);
 
-    final String heimdallSlackToken = System.getProperty("HeimdallSlackToken");
+    String heimdallSlackToken = System.getProperty("HeimdallSlackToken");
 
     if (StringUtils.isNullOrEmpty(readProperties.getChannelName())) {
       throw new NullPointerException("Please specify Slack Channel name in runner properties file");
 
     } else if (StringUtils.isNullOrEmpty(heimdallSlackToken)) {
-      throw new NullPointerException(
-          "Please assign Slack bot token as system property in Jenkins or your machine");
-
+      heimdallSlackToken = readProperties.getHeimdallBotToken();
+      if (StringUtils.isNullOrEmpty(heimdallSlackToken)) {
+        throw new NullPointerException(
+            "Please assign Slack bot token as system property in Jenkins or in runner properties "
+                + "file");
+      }
     }
     final SlackChannelInfo slackChannelInfo =
         SlackChannelInfo.builder().channelName(readProperties.getChannelName())
