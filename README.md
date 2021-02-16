@@ -1,3 +1,5 @@
+# NOTE: This project is not active anymore, as we would be shifting from using this as a service to track our test cases.
+
 # Heimdall
 
 ## Test Reporting Tool
